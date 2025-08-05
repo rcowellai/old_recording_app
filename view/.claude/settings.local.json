@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(firebase firestore:export:*)",
+      "Bash(gsutil ls:*)",
+      "Bash(rm:*)",
+      "Bash(true)",
+      "Bash(mkdir:*)",
+      "Bash(npm install:*)",
+      "Bash(ls:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm start)",
+      "Bash(npm test:*)"
+    ],
+    "deny": []
+  }
+}

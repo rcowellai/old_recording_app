@@ -1,0 +1,41 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Recording Sessions - Anonymous users can read their session data
+    match /recordingSessions/{sessionId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        (resource == null || resource.data.status != 'completed');
+    }
+    
+    // Analytics - Allow creation for tracking events
+    match /analytics/{analyticsId} {
+      allow create: if request.auth != null;
+      allow read: if false; // Admin only
+    }
+    
+    // Error Logs - Allow creation for error tracking
+    match /errorLogs/{logId} {
+      allow create: if request.auth != null;
+      allow read: if false; // Admin only
+    }
+    
+    // Future: User-specific data when integrating with main Love Retold app
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Future: Stories collection for completed recordings
+    match /stories/{storyId} {
+      allow read, write: if request.auth != null && 
+        resource.data.userId == request.auth.uid;
+    }
+    
+    // Admin collections - Cloud Functions only
+    match /admin/{document=**} {
+      allow read, write: if false; // Cloud Functions only
+    }
+  }
+}

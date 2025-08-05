@@ -1,0 +1,544 @@
+/* Component-Specific Styles */
+
+/* Recording Interface */
+.recording-interface {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.question-display {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.question-text {
+  font-size: 1.3rem;
+  font-weight: 525;
+  line-height: 1.3;
+  color: var(--color-primary);
+  margin-bottom: 10px;
+}
+
+.question-asker {
+  color: var(--color-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+/* Recording Mode Selection */
+.recording-mode-selector {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.mode-button {
+  flex: 1;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.mode-button.audio {
+  background-color: var(--bg-tertiary);
+  color: var(--color-primary);
+}
+
+.mode-button.video {
+  background-color: var(--color-primary);
+  color: var(--color-light);
+}
+
+.mode-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mode-button.selected {
+  border-color: var(--color-primary);
+}
+
+.mode-icon {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+/* Video Preview */
+.video-preview-container {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin: 20px 0;
+}
+
+.video-preview {
+  width: 100%;
+  height: 200px;
+  background-color: #000;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.video-preview video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-secondary);
+  font-size: 0.9rem;
+  border-radius: var(--border-radius);
+}
+
+/* Live Video Box (Bottom Left) */
+.live-video-box {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  width: 80px;
+  height: 60px;
+  background-color: #000;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 2px solid var(--color-light);
+}
+
+.live-video-box video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Audio Visualizer */
+.audio-visualizer {
+  width: 100%;
+  max-width: 300px;
+  height: 80px;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  position: relative;
+}
+
+.audio-visualizer.recording {
+  background-color: #f0f0f0;
+}
+
+.visualizer-bars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 40px;
+}
+
+.visualizer-bar {
+  width: 3px;
+  background-color: #d32f2f;
+  border-radius: 2px;
+  transition: height 0.1s ease;
+}
+
+.mic-icon {
+  font-size: 2rem;
+  color: var(--color-secondary);
+}
+
+.mic-icon.live {
+  color: #d32f2f;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Recording Controls */
+.recording-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.recording-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 20px;
+  font-size: 0.9rem;
+  color: var(--color-secondary);
+}
+
+.recording-time {
+  font-weight: 500;
+}
+
+.recording-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+.recording-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #d32f2f;
+  border-radius: 50%;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Countdown Overlay */
+.countdown-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(228, 226, 216, 0.93);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+}
+
+.countdown-text {
+  font-size: 7rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  text-align: center;
+  animation: countdownPulse 1s ease-in-out;
+}
+
+@keyframes countdownPulse {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Submit Overlay */
+.submit-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(228, 226, 216, 0.93);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+}
+
+.submit-card {
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.submit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.submit-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--color-secondary);
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Media Player in Submit */
+.media-player-container {
+  margin: 16px 0;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background-color: #000;
+}
+
+.media-player-container video,
+.media-player-container audio {
+  width: 100%;
+  height: auto;
+}
+
+.media-player-container video {
+  max-height: 220px;
+  object-fit: contain;
+}
+
+/* Custom Audio Player */
+.custom-audio-player {
+  background-color: var(--bg-tertiary);
+  border-radius: var(--border-radius);
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.play-pause-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  cursor: pointer;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--bg-secondary);
+}
+
+.audio-progress {
+  flex: 1;
+  height: 6px;
+  background-color: #ddd;
+  border-radius: 3px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.audio-progress-fill {
+  height: 100%;
+  background-color: var(--color-primary);
+  transition: width 0.1s ease;
+}
+
+.audio-time {
+  font-size: 0.8rem;
+  color: var(--color-secondary);
+  min-width: 45px;
+  text-align: right;
+}
+
+.speed-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.speed-btn {
+  background: none;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.speed-btn.active {
+  background-color: var(--color-primary);
+  color: var(--color-light);
+}
+
+/* Upload Progress */
+.upload-progress-container {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.upload-progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.upload-progress-fill {
+  height: 100%;
+  background-color: var(--color-primary);
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+.upload-progress-text {
+  font-size: 0.9rem;
+  color: var(--color-secondary);
+  margin-bottom: 8px;
+}
+
+.upload-progress-percent {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+/* Confirmation Dialog */
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+}
+
+.confirm-dialog {
+  background-color: var(--bg-primary);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  padding: 30px 20px;
+  text-align: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+.confirm-text {
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.4;
+  margin: 0 0 20px;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: space-around;
+}
+
+.confirm-btn {
+  background-color: var(--bg-tertiary);
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 0.95rem;
+  min-width: 80px;
+  padding: 10px 14px;
+  transition: all 0.2s ease;
+}
+
+.confirm-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.confirm-btn.primary {
+  background-color: var(--color-primary);
+  color: var(--color-light);
+}
+
+/* Confetti Success Screen */
+.confetti-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--bg-primary);
+  text-align: center;
+  padding: 20px;
+}
+
+.success-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 16px;
+}
+
+.success-message {
+  font-size: 1.1rem;
+  color: var(--color-secondary);
+  margin-bottom: 30px;
+  max-width: 400px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .countdown-text {
+    font-size: 5rem;
+  }
+  
+  .submit-card {
+    margin: 10px;
+    padding: 16px;
+  }
+  
+  .media-player-container video {
+    max-height: 180px;
+  }
+  
+  .success-title {
+    font-size: 1.6rem;
+  }
+}
