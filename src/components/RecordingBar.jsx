@@ -1,0 +1,117 @@
+/**
+ * RecordingBar.jsx
+ * ----------------
+ * A slim top bar that shows elapsed recording time and
+ * whether the user is currently recording or paused.
+ * Displays "Rec" in red or "Paused" in gray.
+ */
+
+
+import React from 'react';
+import { FaPause } from 'react-icons/fa';
+
+/*
+  RecordingBar
+  ------------
+  Displays a top widget:
+    - Elapsed time => "mm:ss / 00:30" (LEFT)
+    - On the RIGHT => either "[Custom Record Icon] Rec" in red or "|| Paused" in gray
+
+  PROPS:
+    elapsedSeconds (number)
+    totalSeconds (number) => typically 30
+    isRecording (bool)
+    isPaused (bool)
+    formatTime (func) => shared from App.jsx
+*/
+
+// A custom record icon: open ring with a filled dot in the center
+// We'll define it as an inline SVG so we can style it easily.
+function RecordIcon({ size = 16, color = '#B3261E' }) {
+  // size = overall width/height
+  // color = stroke/fill color
+  const half = size / 2;
+  const outerRadius = size / 2 - 1; // a little padding from the edges
+  const innerRadius = size / 4; // dot is half the radius of outer
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      style={{ marginRight: '4px' }}
+    >
+      {/* Outer ring */}
+      <circle
+        cx={half}
+        cy={half}
+        r={outerRadius}
+        fill="none"
+        stroke={color}
+        strokeWidth="2"
+      />
+      {/* Inner dot */}
+      <circle
+        cx={half}
+        cy={half}
+        r={innerRadius}
+        fill={color}
+      />
+    </svg>
+  );
+}
+
+function RecordingBar({
+  elapsedSeconds,
+  totalSeconds,
+  isRecording,
+  isPaused,
+  formatTime
+}) {
+  // Timer on the left
+  const leftText = `${formatTime(elapsedSeconds)} / ${formatTime(totalSeconds)}`;
+
+  // Determine the icon + text on the right
+  let rightContent;
+  if (isPaused) {
+    // paused => grey color, pause icon
+    rightContent = (
+      <div style={{ color: '#999999', display: 'flex', alignItems: 'center', fontWeight: 400 }}>
+        <FaPause style={{ marginRight: '4px', fontSize: '1em' }} />
+        Paused
+      </div>
+    );
+  } else {
+    // recording => red color, custom record icon
+    rightContent = (
+      <div style={{ color: '#B3261E', display: 'flex', alignItems: 'center', fontWeight: 400 }}>
+        <RecordIcon size={16} color="#B3261E" />
+        Rec
+      </div>
+    );
+  }
+
+  // Overall container => matches the .main-layout-container width
+  const containerStyle = {
+    color: '#999999',
+    width: '100%',
+    display: 'flex',
+    fontWeight: 500,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: '0.805rem',
+    marginBottom: '12px',
+    marginTop: '30px',
+  };
+
+  return (
+    <div style={containerStyle}>
+      {/* LEFT => Timer */}
+      <div>{leftText}</div>
+
+      {/* RIGHT => Rec or Paused */}
+      {rightContent}
+    </div>
+  );
+}
+
+export default RecordingBar;
