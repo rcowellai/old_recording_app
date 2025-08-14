@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function CountdownOverlay({ countdownValue }) {
   return (
@@ -17,5 +18,12 @@ function CountdownOverlay({ countdownValue }) {
     </div>
   );
 }
+
+CountdownOverlay.propTypes = {
+  countdownValue: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ]).isRequired
+};
 
 export default CountdownOverlay;

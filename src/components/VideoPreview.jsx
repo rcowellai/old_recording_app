@@ -8,6 +8,7 @@
 
 
 import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 
 /*
   VideoPreview
@@ -58,5 +59,9 @@ function VideoPreview({ stream }) {
     </div>
   );
 }
+
+VideoPreview.propTypes = {
+  stream: PropTypes.object // MediaStream object or null
+};
 
 export default VideoPreview;

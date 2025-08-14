@@ -7,7 +7,9 @@
  */
 
 import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import ProgressBar from 'progressbar.js';
+import { COLORS } from '../constants/recording';
 
 function ProgressOverlay({ fraction }) {
   const containerRef = useRef(null);
@@ -19,8 +21,8 @@ function ProgressOverlay({ fraction }) {
       circleRef.current = new ProgressBar.Circle(containerRef.current, {
         strokeWidth: 6,
         trailWidth: 6,
-        trailColor: '#E4E2D8',
-        color: '#2C2F48',
+        trailColor: COLORS.BACKGROUND_SECONDARY,
+        color: COLORS.PRIMARY_DARK,
         easing: 'easeInOut',
         duration: 200,
       });
@@ -35,7 +37,7 @@ function ProgressOverlay({ fraction }) {
         top: 0, left: 0,
         width: '100%',
         height: '100%',
-        backgroundColor: 'rgba(228,226,216,0.93)',
+        backgroundColor: 'rgba(228,226,216,0.93)', // Using raw rgba to maintain transparency
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -47,7 +49,7 @@ function ProgressOverlay({ fraction }) {
         style={{
           marginBottom: '25px',
           fontSize: '1.25rem',
-          color: '#2C2F48',
+          color: COLORS.PRIMARY_DARK,
         }}
       >
         Memories Uploading
@@ -56,5 +58,9 @@ function ProgressOverlay({ fraction }) {
     </div>
   );
 }
+
+ProgressOverlay.propTypes = {
+  fraction: PropTypes.number.isRequired
+};
 
 export default ProgressOverlay;

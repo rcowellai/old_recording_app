@@ -10,6 +10,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import PromptCard from '../components/PromptCard';
+import { LAYOUT } from '../constants/recording';
 
 // Instead of importing Firestore directly:
 // import { doc, getDoc } from 'firebase/firestore';
@@ -27,8 +28,6 @@ function ViewRecording() {
   const [fileType, setFileType] = useState(null);
 
   const videoRef = useRef(null);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
@@ -59,18 +58,11 @@ function ViewRecording() {
   }, [docId]);
 
   const handleLoadedMetadata = () => {
-    if (!videoRef.current) return;
-    let dur = videoRef.current.duration;
-    if (!dur || isNaN(dur) || !isFinite(dur)) dur = 0;
-    setDuration(dur);
-    setCurrentTime(0);
+    // Metadata loaded - could be used for future enhancements
   };
 
   const handleTimeUpdate = () => {
-    if (!videoRef.current) return;
-    let ct = videoRef.current.currentTime;
-    if (!ct || isNaN(ct) || !isFinite(ct)) ct = 0;
-    setCurrentTime(ct);
+    // Time update - could be used for future enhancements
   };
 
   if (loading) {
@@ -119,7 +111,7 @@ function ViewRecording() {
       <div className="main-layout-container">
         <PromptCard />
 
-        <div style={{ marginTop: '30px' }}>
+        <div style={{ marginTop: LAYOUT.MARGIN_TOP_MEDIUM }}>
           {isVideo ? (
             <div style={{ marginBottom: '24px', textAlign: 'center' }}>
               <video

@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function ConfirmOverlay({ onYes, onNo }) {
   return (
@@ -33,5 +34,10 @@ function ConfirmOverlay({ onYes, onNo }) {
     </div>
   );
 }
+
+ConfirmOverlay.propTypes = {
+  onYes: PropTypes.func.isRequired,
+  onNo: PropTypes.func.isRequired
+};
 
 export default ConfirmOverlay;

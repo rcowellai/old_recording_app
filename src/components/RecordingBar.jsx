@@ -8,18 +8,20 @@
 
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { FaPause } from 'react-icons/fa';
+import { COLORS, LAYOUT } from '../constants/recording';
 
 /*
   RecordingBar
   ------------
   Displays a top widget:
-    - Elapsed time => "mm:ss / 00:30" (LEFT)
+    - Elapsed time => "mm:ss / mm:ss" (LEFT)
     - On the RIGHT => either "[Custom Record Icon] Rec" in red or "|| Paused" in gray
 
   PROPS:
     elapsedSeconds (number)
-    totalSeconds (number) => typically 30
+    totalSeconds (number) => from RECORDING_LIMITS.MAX_DURATION_SECONDS
     isRecording (bool)
     isPaused (bool)
     formatTime (func) => shared from App.jsx
@@ -27,7 +29,7 @@ import { FaPause } from 'react-icons/fa';
 
 // A custom record icon: open ring with a filled dot in the center
 // We'll define it as an inline SVG so we can style it easily.
-function RecordIcon({ size = 16, color = '#B3261E' }) {
+function RecordIcon({ size = LAYOUT.RECORD_ICON_SIZE, color = COLORS.RECORDING_RED }) {
   // size = overall width/height
   // color = stroke/fill color
   const half = size / 2;
@@ -75,7 +77,7 @@ function RecordingBar({
   if (isPaused) {
     // paused => grey color, pause icon
     rightContent = (
-      <div style={{ color: '#999999', display: 'flex', alignItems: 'center', fontWeight: 400 }}>
+      <div style={{ color: COLORS.INACTIVE_GRAY, display: 'flex', alignItems: 'center', fontWeight: 400 }}>
         <FaPause style={{ marginRight: '4px', fontSize: '1em' }} />
         Paused
       </div>
@@ -83,8 +85,8 @@ function RecordingBar({
   } else {
     // recording => red color, custom record icon
     rightContent = (
-      <div style={{ color: '#B3261E', display: 'flex', alignItems: 'center', fontWeight: 400 }}>
-        <RecordIcon size={16} color="#B3261E" />
+      <div style={{ color: COLORS.RECORDING_RED, display: 'flex', alignItems: 'center', fontWeight: 400 }}>
+        <RecordIcon size={LAYOUT.RECORD_ICON_SIZE} color={COLORS.RECORDING_RED} />
         Rec
       </div>
     );
@@ -92,7 +94,7 @@ function RecordingBar({
 
   // Overall container => matches the .main-layout-container width
   const containerStyle = {
-    color: '#999999',
+    color: COLORS.INACTIVE_GRAY,
     width: '100%',
     display: 'flex',
     fontWeight: 500,
@@ -100,7 +102,7 @@ function RecordingBar({
     alignItems: 'center',
     fontSize: '0.805rem',
     marginBottom: '12px',
-    marginTop: '30px',
+    marginTop: LAYOUT.MARGIN_TOP_MEDIUM,
   };
 
   return (
@@ -113,5 +115,13 @@ function RecordingBar({
     </div>
   );
 }
+
+RecordingBar.propTypes = {
+  elapsedSeconds: PropTypes.number.isRequired,
+  totalSeconds: PropTypes.number.isRequired,
+  isRecording: PropTypes.bool.isRequired,
+  isPaused: PropTypes.bool.isRequired,
+  formatTime: PropTypes.func.isRequired
+};
 
 export default RecordingBar;

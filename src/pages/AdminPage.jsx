@@ -13,6 +13,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
+import { COLORS, LAYOUT } from '../constants/recording';
 
 // Import local storage service layer
 import { fetchAllRecordings } from '../services/localRecordingService';
@@ -77,7 +78,7 @@ function AdminPage() {
     }
 
     // e.g. "2025-01-26"
-    const [yearStr, monthStr, dayStr] = selectedDate.split('-');
+    const [, monthStr, dayStr] = selectedDate.split('-');
     const dayNum = parseInt(dayStr, 10);
     const monthNum = parseInt(monthStr, 10);
 
@@ -122,8 +123,8 @@ function AdminPage() {
       <div
         className="main-layout-container"
         style={{
-          backgroundColor: '#F5F4F0',
-          maxWidth: '480px',
+          backgroundColor: COLORS.PRIMARY_LIGHT,
+          maxWidth: LAYOUT.MAX_WIDTH,
           margin: '0 auto',
           padding: '20px'
         }}
@@ -133,7 +134,7 @@ function AdminPage() {
         </h2>
 
         {/* Filter Form */}
-        <form onSubmit={handleSubmit} style={{ marginTop: '10px' }}>
+        <form onSubmit={handleSubmit} style={{ marginTop: LAYOUT.MARGIN_TOP_SMALL }}>
           <div style={{ marginBottom: '15px', display: 'flex', flexDirection: 'column' }}>
             <label style={{ marginBottom: '6px' }}>
               Select Date:
@@ -178,8 +179,8 @@ function AdminPage() {
           <button
             type="submit"
             style={{
-              backgroundColor: '#2C2F48',
-              color: '#F5F4F0',
+              backgroundColor: COLORS.PRIMARY_DARK,
+              color: COLORS.PRIMARY_LIGHT,
               border: 'none',
               borderRadius: '8px',
               fontSize: '1rem',
@@ -192,7 +193,7 @@ function AdminPage() {
         </form>
 
         {/* Results */}
-        <div style={{ marginTop: '30px' }}>
+        <div style={{ marginTop: LAYOUT.MARGIN_TOP_MEDIUM }}>
           {filteredResults.map((rec) => {
             // Extract dd/mm, hh:mm for display
             let dd = '--', mm = '--';
@@ -206,7 +207,7 @@ function AdminPage() {
               Min = String(dt.getMinutes()).padStart(2, '0');
             } else if (rec.fileName) {
               const [datePart, timePart] = rec.fileName.split('_');
-              const [yr, mo, dy] = datePart.split('-');
+              const [, mo, dy] = datePart.split('-');
               dd = dy;
               mm = mo;
               if (timePart?.length >= 6) {
@@ -237,7 +238,7 @@ function AdminPage() {
 
                 {/* QR code => link to /view/:docId */}
                 <div style={{ marginBottom: '8px' }}>
-                  <QRCodeCanvas value={docUrl} size={80} includeMargin />
+                  <QRCodeCanvas value={docUrl} size={LAYOUT.QR_CODE_SIZE} includeMargin />
                 </div>
 
                 <a

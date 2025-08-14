@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import Confetti from 'react-confetti';
 
 function ConfettiScreen({ docId }) {
@@ -46,5 +47,9 @@ function ConfettiScreen({ docId }) {
     </div>
   );
 }
+
+ConfettiScreen.propTypes = {
+  docId: PropTypes.string.isRequired
+};
 
 export default ConfettiScreen;

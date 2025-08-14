@@ -8,7 +8,9 @@
 
 
 import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { FaMicrophoneAlt } from 'react-icons/fa';
+import { CANVAS, COLORS, AUDIO_ANALYSIS } from '../constants/recording';
 
 function AudioRecorder({ stream, isRecording }) {
   const canvasRef = useRef(null);
@@ -23,9 +25,9 @@ function AudioRecorder({ stream, isRecording }) {
     const source = audioContext.createMediaStreamSource(stream);
 
     const analyser = audioContext.createAnalyser();
-    analyser.fftSize = 256;
+    analyser.fftSize = AUDIO_ANALYSIS.FFT_SIZE;
     const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
+    const dataArray = new AUDIO_ANALYSIS.DATA_TYPE(bufferLength);
 
     source.connect(analyser);
 
@@ -36,15 +38,12 @@ function AudioRecorder({ stream, isRecording }) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
-    // Canvas is 80x80, so the vertical center is 40
-    const centerY = 40;
-    // Horizontal offset & width for wave
-    const offsetX = 16;
-    const waveWidth = 48; // total wave region in x-direction
-
-    // We'll let waveHeight = 48 so the wave can swing ~24px above/below center
-    const waveHeight = 48;
-    const sensitivityFactor = 1.3; // Increase if you want more dramatic movement
+    // Canvas dimensions and positioning from constants
+    const centerY = CANVAS.CENTER_Y;
+    const offsetX = CANVAS.OFFSET_X;
+    const waveWidth = CANVAS.WAVE_WIDTH;
+    const waveHeight = CANVAS.WAVE_HEIGHT;
+    const sensitivityFactor = CANVAS.SENSITIVITY_FACTOR;
 
     function draw() {
       if (!analyserRef.current || !dataArrayRef.current) {
@@ -54,25 +53,24 @@ function AudioRecorder({ stream, isRecording }) {
 
       analyser.getByteTimeDomainData(dataArrayRef.current);
 
-      // Clear entire 80x80
+      // Clear entire canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Fill the background to match the box color
-      ctx.fillStyle = '#E4E2D8';
-      ctx.fillRect(0, 0, 80, 80);
+      ctx.fillStyle = COLORS.BACKGROUND_SECONDARY;
+      ctx.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
 
       ctx.lineWidth = 2;
-      ctx.strokeStyle = '#B3261E'; // red wave
+      ctx.strokeStyle = COLORS.RECORDING_RED;
       ctx.beginPath();
 
-      // Each data point: 0..255 => after /128 => 0..2. 
-      // We'll center it by subtracting 1 => range -1..+1, then multiply for amplitude.
+      // Normalize and process audio data using constants
       const sliceWidth = waveWidth / bufferLength;
       let xPos = offsetX;
 
       for (let i = 0; i < bufferLength; i++) {
-        let v = dataArrayRef.current[i] / 128.0;    // 0..2
-        v = (v - 1.0) * sensitivityFactor;          // -1..+1 => scaled
+        let v = dataArrayRef.current[i] / AUDIO_ANALYSIS.NORMALIZATION_FACTOR;    // 0..2
+        v = (v - AUDIO_ANALYSIS.CENTERING_OFFSET) * sensitivityFactor;          // -1..+1 => scaled
 
         // Convert that range into a Y offset from center
         const y = centerY + (v * (waveHeight / 2)); 
@@ -107,18 +105,18 @@ function AudioRecorder({ stream, isRecording }) {
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, 80, 80);
+    ctx.clearRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
 
     // Fill
-    ctx.fillStyle = '#E4E2D8';
-    ctx.fillRect(0, 0, 80, 80);
+    ctx.fillStyle = COLORS.BACKGROUND_SECONDARY;
+    ctx.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
 
     // slash
-    ctx.strokeStyle = '#999999';
+    ctx.strokeStyle = COLORS.INACTIVE_GRAY;
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(16, 16);
-    ctx.lineTo(64, 64);
+    ctx.moveTo(CANVAS.OFFSET_X, CANVAS.OFFSET_X);
+    ctx.lineTo(CANVAS.WIDTH - CANVAS.OFFSET_X, CANVAS.HEIGHT - CANVAS.OFFSET_X);
     ctx.stroke();
   }, [isRecording]);
 
@@ -126,7 +124,7 @@ function AudioRecorder({ stream, isRecording }) {
   const containerStyle = {
     width: '100%',
     height: '100%',
-    backgroundColor: '#E4E2D8',
+    backgroundColor: COLORS.BACKGROUND_SECONDARY,
     borderRadius: '8px',
     boxSizing: 'border-box',
     padding: '8px',
@@ -149,7 +147,7 @@ function AudioRecorder({ stream, isRecording }) {
   // Mic icon => bigger if recording
   const iconStyle = {
     fontSize: '1.8rem',
-    color: isRecording ? '#B3261E' : '#999999',
+    color: isRecording ? COLORS.RECORDING_RED : COLORS.INACTIVE_GRAY,
     zIndex: 2,
   };
 
@@ -157,13 +155,18 @@ function AudioRecorder({ stream, isRecording }) {
     <div style={containerStyle}>
       <canvas
         ref={canvasRef}
-        width={80}
-        height={80}
+        width={CANVAS.WIDTH}
+        height={CANVAS.HEIGHT}
         style={canvasStyle}
       />
       <FaMicrophoneAlt style={iconStyle} />
     </div>
   );
 }
+
+AudioRecorder.propTypes = {
+  stream: PropTypes.object, // MediaStream object or null
+  isRecording: PropTypes.bool.isRequired
+};
 
 export default AudioRecorder;

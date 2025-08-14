@@ -8,7 +8,10 @@
 
 
 import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { FaPlay, FaPause } from 'react-icons/fa';
+import { COLORS, TIME_FORMAT, LAYOUT } from '../constants/recording';
+import { createError, UPLOAD_ERRORS } from '../utils/errors';
 
 function AudioPlayback({ audioSrc }) {
   const audioRef = useRef(null);
@@ -87,8 +90,12 @@ function AudioPlayback({ audioSrc }) {
       setIsPlaying(false);
     } else {
       audioRef.current.play().catch((err) => {
-        // If autoplay is blocked, log error
-        console.warn('Play attempt was blocked:', err);
+        const structuredError = createError(
+          UPLOAD_ERRORS.PERMISSION_DENIED,
+          'Audio playback was blocked by browser autoplay policy',
+          err
+        );
+        console.warn('Audio playback error:', structuredError);
       });
       setIsPlaying(true);
     }
@@ -118,10 +125,10 @@ function AudioPlayback({ audioSrc }) {
    * Format time as mm:ss
    ************************************************************/
   const formatTime = (sec) => {
-    if (!sec || isNaN(sec) || !isFinite(sec)) return '0:00';
-    const m = Math.floor(sec / 60);
-    const s = Math.floor(sec % 60);
-    return `${m}:${s < 10 ? '0' : ''}${s}`;
+    if (!sec || isNaN(sec) || !isFinite(sec)) return TIME_FORMAT.DEFAULT_TIME_DISPLAY;
+    const m = Math.floor(sec / TIME_FORMAT.SECONDS_PER_MINUTE);
+    const s = Math.floor(sec % TIME_FORMAT.SECONDS_PER_MINUTE);
+    return `${m}:${s < TIME_FORMAT.ZERO_PADDING_THRESHOLD ? '0' : ''}${s}`;
   };
 
   // If no audio src, render nothing
@@ -149,7 +156,7 @@ function AudioPlayback({ audioSrc }) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: '10px',
+    marginBottom: LAYOUT.MARGIN_BOTTOM_SMALL,
   };
 
   const timeTextStyle = {
@@ -177,7 +184,7 @@ function AudioPlayback({ audioSrc }) {
     border: 'none',
     cursor: 'pointer',
     fontSize: '1.5rem',
-    color: '#2C2F48',
+    color: COLORS.PRIMARY_DARK,
   };
 
   // Speed area => smaller font
@@ -229,13 +236,13 @@ function AudioPlayback({ audioSrc }) {
                 onClick={() => handleSpeedClick(speed)}
                 style={{
                   background: 'none',
-                  border: isSelected ? '1px solid #2C2F48' : '1px solid transparent',
+                  border: isSelected ? `1px solid ${COLORS.PRIMARY_DARK}` : '1px solid transparent',
                   fontWeight: isSelected ? '600' : '400',
                   borderRadius: '4px',
                   cursor: 'pointer',
                   padding: '2px 6px',
                   marginRight: '8px',
-                  color: '#2C2F48',
+                  color: COLORS.PRIMARY_DARK,
                   fontSize: '0.675rem', // ~25% smaller for better fit
                 }}
               >
@@ -248,5 +255,9 @@ function AudioPlayback({ audioSrc }) {
     </div>
   );
 }
+
+AudioPlayback.propTypes = {
+  audioSrc: PropTypes.string.isRequired
+};
 
 export default AudioPlayback;

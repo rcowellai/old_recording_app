@@ -8,51 +8,127 @@
 //
 // ----------------------------------------------------------
 
-// Local storage keys
-const RECORDINGS_KEY = 'local_recordings';
-const BLOB_STORAGE_KEY = 'local_blobs';
+import { 
+  safeParseJSON, 
+  validateStorageData, 
+  createError, 
+  classifyStorageError,
+  UPLOAD_ERRORS,
+  STORAGE_ERRORS 
+} from '../utils/errors';
+import { SERVICE_CONFIG } from '../config';
+
+// Local storage keys (now from configuration)
+const RECORDINGS_KEY = SERVICE_CONFIG.LOCAL_STORAGE.RECORDINGS_KEY;
+const BLOB_STORAGE_KEY = SERVICE_CONFIG.LOCAL_STORAGE.BLOB_STORAGE_KEY;
 
 // Simulate server timestamp
 const serverTimestamp = () => new Date().toISOString();
 
-// Helper to get recordings from localStorage
+// Helper to get recordings from localStorage with structured error handling
 function getStoredRecordings() {
   try {
     const stored = localStorage.getItem(RECORDINGS_KEY);
-    return stored ? JSON.parse(stored) : [];
-  } catch {
+    if (!stored) {
+      return [];
+    }
+    
+    const parsed = safeParseJSON(stored, []);
+    
+    // Validate data structure
+    if (!validateStorageData(parsed)) {
+      console.warn('Invalid recordings data structure, returning empty array');
+      return [];
+    }
+    
+    return parsed;
+  } catch (error) {
+    const errorType = classifyStorageError(error);
+    const structuredError = createError(
+      errorType === STORAGE_ERRORS.QUOTA_EXCEEDED ? UPLOAD_ERRORS.QUOTA_EXCEEDED : UPLOAD_ERRORS.UNKNOWN,
+      'Failed to retrieve recordings from storage',
+      error
+    );
+    console.error('Storage error in getStoredRecordings:', structuredError);
     return [];
   }
 }
 
-// Helper to save recordings to localStorage
+// Helper to save recordings to localStorage with structured error handling
 function saveRecordings(recordings) {
   try {
+    // Validate input data
+    if (!validateStorageData(recordings)) {
+      throw new Error('Invalid recordings data structure');
+    }
+    
     localStorage.setItem(RECORDINGS_KEY, JSON.stringify(recordings));
-  } catch (err) {
-    console.warn('Failed to save recordings to localStorage:', err);
+  } catch (error) {
+    const errorType = classifyStorageError(error);
+    const structuredError = createError(
+      errorType === STORAGE_ERRORS.QUOTA_EXCEEDED ? UPLOAD_ERRORS.QUOTA_EXCEEDED : UPLOAD_ERRORS.UNKNOWN,
+      'Failed to save recordings to storage',
+      error
+    );
+    console.error('Storage error in saveRecordings:', structuredError);
+    throw structuredError;
   }
 }
 
-// Helper to store blob URL
+// Helper to store blob URL with structured error handling
 function storeBlobUrl(docId, blobUrl) {
   try {
+    if (!docId || !blobUrl || typeof docId !== 'string' || typeof blobUrl !== 'string') {
+      throw new Error('Invalid docId or blobUrl parameters');
+    }
+    
     const stored = localStorage.getItem(BLOB_STORAGE_KEY) || '{}';
-    const blobs = JSON.parse(stored);
+    let blobs = safeParseJSON(stored, {});
+    
+    // Validate blob storage structure
+    if (!validateStorageData(blobs)) {
+      console.warn('Invalid blob storage data, resetting to empty object');
+      blobs = {};
+    }
+    
     blobs[docId] = blobUrl;
     localStorage.setItem(BLOB_STORAGE_KEY, JSON.stringify(blobs));
-  } catch (err) {
-    console.warn('Failed to store blob URL:', err);
+  } catch (error) {
+    const errorType = classifyStorageError(error);
+    const structuredError = createError(
+      errorType === STORAGE_ERRORS.QUOTA_EXCEEDED ? UPLOAD_ERRORS.QUOTA_EXCEEDED : UPLOAD_ERRORS.UNKNOWN,
+      'Failed to store blob URL',
+      error
+    );
+    console.error('Storage error in storeBlobUrl:', structuredError);
+    // Don't throw here to maintain existing behavior of continuing without blob URL
   }
 }
 
-// Helper to get blob URL
+// Helper to get blob URL with structured error handling
 function getBlobUrl(docId) {
   try {
+    if (!docId || typeof docId !== 'string') {
+      return null;
+    }
+    
     const stored = localStorage.getItem(BLOB_STORAGE_KEY) || '{}';
-    const blobs = JSON.parse(stored);
+    const blobs = safeParseJSON(stored, {});
+    
+    // Validate blob storage structure
+    if (!validateStorageData(blobs)) {
+      console.warn('Invalid blob storage data structure');
+      return null;
+    }
+    
     return blobs[docId] || null;
-  } catch {
+  } catch (error) {
+    const structuredError = createError(
+      UPLOAD_ERRORS.UNKNOWN,
+      'Failed to retrieve blob URL',
+      error
+    );
+    console.error('Storage error in getBlobUrl:', structuredError);
     return null;
   }
 }
@@ -64,7 +140,7 @@ function getBlobUrl(docId) {
  */
 export async function fetchRecording(docId) {
   // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 300));
+  await new Promise(resolve => setTimeout(resolve, SERVICE_CONFIG.LOCAL_STORAGE.FETCH_DELAY_MS));
   
   try {
     const recordings = getStoredRecordings();
@@ -93,7 +169,7 @@ export async function fetchRecording(docId) {
  */
 export async function fetchAllRecordings() {
   // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise(resolve => setTimeout(resolve, SERVICE_CONFIG.LOCAL_STORAGE.FETCH_DELAY_MS));
   
   try {
     const recordings = getStoredRecordings();
@@ -146,29 +222,42 @@ export async function uploadRecording(
         if (progress >= 1) {
           clearInterval(progressInterval);
           
-          // Store the recording metadata
-          const recordings = getStoredRecordings();
-          const newRecording = {
-            id: docId,
-            downloadURL,
-            fileType,
-            fileName,
-            createdAt: serverTimestamp(),
-            // Add some demo metadata
-            size: blob.size,
-            mimeType: actualMimeType || blob.type
-          };
-          
-          recordings.push(newRecording);
-          saveRecordings(recordings);
-          
-          // Store blob URL separately for retrieval
-          storeBlobUrl(docId, downloadURL);
-          
-          console.log('✅ Local upload complete:', { docId, fileName });
-          resolve({ docId, downloadURL });
+          try {
+            // Store the recording metadata
+            const recordings = getStoredRecordings();
+            const newRecording = {
+              id: docId,
+              downloadURL,
+              fileType,
+              fileName,
+              createdAt: serverTimestamp(),
+              // Add some demo metadata
+              size: blob.size,
+              mimeType: actualMimeType || blob.type
+            };
+            
+            recordings.push(newRecording);
+            saveRecordings(recordings);
+            
+            // Store blob URL separately for retrieval
+            storeBlobUrl(docId, downloadURL);
+            
+            console.log('✅ Local upload complete:', { docId, fileName });
+            resolve({ docId, downloadURL });
+          } catch (saveError) {
+            const structuredError = createError(
+              UPLOAD_ERRORS.UNKNOWN,
+              'Failed to save recording metadata',
+              saveError
+            );
+            console.error('Upload error during save:', structuredError);
+            resolve({ 
+              docId: 'error_' + Date.now(), 
+              downloadURL: URL.createObjectURL(blob) 
+            });
+          }
         }
-      }, 200); // Update progress every 200ms
+      }, SERVICE_CONFIG.LOCAL_STORAGE.UPLOAD_PROGRESS_INTERVAL_MS);
       
     } catch (err) {
       console.error('Error in local uploadRecording:', err);
