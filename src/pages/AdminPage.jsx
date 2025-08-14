@@ -14,8 +14,8 @@
 import React, { useState, useEffect } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 
-// Import your new service layer
-import { fetchAllRecordings } from '../services/firebaseRecordingService';
+// Import local storage service layer
+import { fetchAllRecordings } from '../services/localRecordingService';
 
 function AdminPage() {
   const [selectedDate, setSelectedDate] = useState('');

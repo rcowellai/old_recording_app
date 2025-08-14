@@ -15,7 +15,7 @@ import PromptCard from '../components/PromptCard';
 // import { doc, getDoc } from 'firebase/firestore';
 // import { db } from '../services/firebase';
 
-import { fetchRecording } from '../services/firebaseRecordingService';
+import { fetchRecording } from '../services/localRecordingService';
 
 function ViewRecording() {
   const { docId } = useParams();

@@ -26,8 +26,8 @@ import ProgressOverlay from './components/ProgressOverlay';
 import ConfirmOverlay from './components/ConfirmOverlay';
 import ConfettiScreen from './components/confettiScreen';
 
-// Firebase service
-import { uploadRecording } from './services/firebaseRecordingService';
+// Local storage service
+import { uploadRecording } from './services/localRecordingService';
 
 import './styles/App.css';
 

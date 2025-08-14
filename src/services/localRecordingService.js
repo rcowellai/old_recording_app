@@ -1,10 +1,10 @@
 // ----------------------------------------------------------
-// firebaseRecordingService.js - LOCAL MOCK VERSION
+// localRecordingService.js - LOCAL STORAGE IMPLEMENTATION
 // ----------------------------------------------------------
 //
-// This file provides mock implementations of Firebase services
-// for local development and testing. Recordings are stored in
-// localStorage and blob URLs for playback.
+// This file provides local storage implementations for recording
+// services. Recordings are stored in browser localStorage with
+// blob URLs for playback. No server or network connection needed.
 //
 // ----------------------------------------------------------
 
@@ -58,7 +58,7 @@ function getBlobUrl(docId) {
 }
 
 /**
- * Fetch a single recording document by ID (MOCK VERSION).
+ * Fetch a single recording document by ID (LOCAL VERSION).
  * @param {string} docId Local recording ID
  * @returns {Promise<Object|null>} The recording data or null if not found
  */
@@ -88,7 +88,7 @@ export async function fetchRecording(docId) {
 }
 
 /**
- * Fetch all recordings (MOCK VERSION).
+ * Fetch all recordings (LOCAL VERSION).
  * @returns {Promise<Array>} Array of recording objects
  */
 export async function fetchAllRecordings() {
@@ -106,8 +106,8 @@ export async function fetchAllRecordings() {
 }
 
 /**
- * Upload a blob (MOCK VERSION - stores locally).
- * Simulates Firebase upload with progress callbacks.
+ * Upload a blob (LOCAL VERSION - stores in browser).
+ * Simulates upload process with progress callbacks for smooth UX.
  *
  * @param {Blob} blob        The recording blob
  * @param {string} fileName  The desired file name
@@ -125,7 +125,7 @@ export async function uploadRecording(
 ) {
   return new Promise((resolve) => {
     try {
-      console.log('🚀 Mock upload started:', fileName, fileType);
+      console.log('🚀 Local upload started:', fileName, fileType);
       
       // Create blob URL for local playback
       const downloadURL = URL.createObjectURL(blob);
@@ -165,13 +165,13 @@ export async function uploadRecording(
           // Store blob URL separately for retrieval
           storeBlobUrl(docId, downloadURL);
           
-          console.log('✅ Mock upload complete:', { docId, fileName });
+          console.log('✅ Local upload complete:', { docId, fileName });
           resolve({ docId, downloadURL });
         }
       }, 200); // Update progress every 200ms
       
     } catch (err) {
-      console.error('Error in mock uploadRecording:', err);
+      console.error('Error in local uploadRecording:', err);
       resolve({ 
         docId: 'error_' + Date.now(), 
         downloadURL: URL.createObjectURL(blob) 
@@ -199,5 +199,5 @@ export function getLocalStorageStats() {
   };
 }
 
-console.log('📱 Firebase Recording Service: LOCAL MOCK MODE ENABLED');
+console.log('📱 Local Recording Service: ENABLED');
 console.log('💾 Recordings will be stored in browser localStorage');
