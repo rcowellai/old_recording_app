@@ -1,13 +1,18 @@
 /**
- * SubmissionHandler.jsx
+ * submissionHandlers.js
  * ---------------------
- * Manages the submission flow, file upload, and confetti transition.
- * Extracts submission concerns from App.js while preserving exact behavior.
+ * Utility functions for handling recording submission flow.
+ * Moved from components/SubmissionHandler.jsx for better architecture.
  */
 
 import { uploadRecording } from '../services/localRecordingService';
 
-function SubmissionHandler({
+/**
+ * Creates a submission handler function
+ * @param {Object} params - Submission parameters
+ * @returns {Function} handleSubmit function
+ */
+export function createSubmissionHandler({
   recordedBlobUrl,
   captureMode, 
   actualMimeType,
@@ -81,7 +86,5 @@ function SubmissionHandler({
     }
   };
 
-  return { handleSubmit };
+  return handleSubmit;
 }
-
-export default SubmissionHandler;

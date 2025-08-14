@@ -10,7 +10,7 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FaMicrophoneAlt } from 'react-icons/fa';
-import { CANVAS, COLORS, AUDIO_ANALYSIS } from '../constants/recording';
+import { CANVAS, COLORS, AUDIO_ANALYSIS } from '../config';
 
 function AudioRecorder({ stream, isRecording }) {
   const canvasRef = useRef(null);

@@ -6,7 +6,7 @@
  */
 
 import { useRef } from 'react';
-import { TIME_FORMAT, VIDEO_PLAYER } from '../constants/recording';
+import { TIME_FORMAT, VIDEO_PLAYER } from '../config';
 import { createError, UPLOAD_ERRORS } from '../utils/errors';
 
 function MediaPlayer({ appState, dispatch, APP_ACTIONS }) {

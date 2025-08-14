@@ -1,11 +1,16 @@
 /**
- * NavigationController.jsx
- * ------------------------
- * Manages overlay states, confirmations, and start-over flow.
- * Extracts navigation concerns from App.js while preserving exact behavior.
+ * navigationHandlers.js
+ * ----------------------
+ * Utility functions for handling navigation and overlay states.
+ * Moved from components/NavigationController.jsx for better architecture.
  */
 
-function NavigationController({ 
+/**
+ * Creates navigation handler functions
+ * @param {Object} params - Navigation parameters
+ * @returns {Object} Object containing navigation handlers
+ */
+export function createNavigationHandlers({ 
   appState, 
   dispatch, 
   APP_ACTIONS,
@@ -49,5 +54,3 @@ function NavigationController({
     handleDoneAndSubmitStage
   };
 }
-
-export default NavigationController;

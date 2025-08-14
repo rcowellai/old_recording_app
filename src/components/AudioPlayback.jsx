@@ -10,7 +10,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaPlay, FaPause } from 'react-icons/fa';
-import { COLORS, TIME_FORMAT, LAYOUT } from '../constants/recording';
+import { COLORS, TIME_FORMAT, LAYOUT } from '../config';
 import { createError, UPLOAD_ERRORS } from '../utils/errors';
 
 function AudioPlayback({ audioSrc }) {

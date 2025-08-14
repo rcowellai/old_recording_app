@@ -13,7 +13,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
-import { COLORS, LAYOUT } from '../constants/recording';
+import { COLORS, LAYOUT } from '../config';
 
 // Import local storage service layer
 import { fetchAllRecordings } from '../services/localRecordingService';

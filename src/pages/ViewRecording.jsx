@@ -10,7 +10,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import PromptCard from '../components/PromptCard';
-import { LAYOUT } from '../constants/recording';
+import { LAYOUT } from '../config';
 
 // Instead of importing Firestore directly:
 // import { doc, getDoc } from 'firebase/firestore';

@@ -9,7 +9,7 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import ProgressBar from 'progressbar.js';
-import { COLORS } from '../constants/recording';
+import { COLORS } from '../config';
 
 function ProgressOverlay({ fraction }) {
   const containerRef = useRef(null);

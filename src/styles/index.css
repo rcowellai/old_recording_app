@@ -7,7 +7,7 @@
  */
 
 
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+/* Font import moved to HTML head for better performance */
 
 /* ---------- Global HTML/BODY ---------- */
 html, body {
@@ -82,22 +82,22 @@ html, body {
   min-width: 100px;
   max-width: 200px;
   min-height: 40px;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: var(--btn-border, none);
+  border-radius: var(--btn-border-radius, 8px);
+  font-size: var(--btn-font-size, 0.95rem);
+  cursor: var(--btn-cursor, pointer);
+  display: var(--btn-display, flex);
+  align-items: var(--btn-align-items, center);
+  justify-content: var(--btn-justify-content, center);
   opacity: 1;
 }
 .btn-left-lower {
-  background-color: #E4E2D8;
-  color: #2C2F48;
+  background-color: var(--btn-secondary-bg, #E4E2D8);
+  color: var(--btn-secondary-color, #2C2F48);
   padding: 8px 20px;
 }
 .btn-right-lower {
-  background-color: #2C2F48;
-  color: #F5F4F0;
+  background-color: var(--btn-primary-bg, #2C2F48);
+  color: var(--btn-primary-color, #F5F4F0);
   padding: 8px 16px;
 }

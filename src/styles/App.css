@@ -44,6 +44,25 @@
   text-align: center;
 }
 
+/* ============= CSS CUSTOM PROPERTIES ============= */
+/* Define common button properties to reduce redundancy */
+:root {
+  --btn-border: none;
+  --btn-border-radius: 8px;
+  --btn-font-size: 0.95rem;
+  --btn-cursor: pointer;
+  --btn-display: flex;
+  --btn-align-items: center;
+  --btn-justify-content: center;
+  
+  --btn-primary-bg: #2C2F48;
+  --btn-primary-color: #F5F4F0;
+  --btn-secondary-bg: #E4E2D8;
+  --btn-secondary-color: #2C2F48;
+  
+  --btn-large-height: 80px;
+}
+
 /* ============= TWO-BUTTON LAYOUT ============= */
 .two-button-row {
   display: flex;
@@ -52,29 +71,29 @@
 }
 .two-button-left {
   width: 45%;
-  height: 80px;
-  background-color: #E4E2D8;
-  color: #2C2F48;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: var(--btn-large-height);
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
+  border: var(--btn-border);
+  border-radius: var(--btn-border-radius);
+  font-size: var(--btn-font-size);
+  cursor: var(--btn-cursor);
+  display: var(--btn-display);
+  align-items: var(--btn-align-items);
+  justify-content: var(--btn-justify-content);
 }
 .two-button-right {
   width: 45%;
-  height: 80px;
-  background-color: #2C2F48;
-  color: #F5F4F0;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: var(--btn-large-height);
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
+  border: var(--btn-border);
+  border-radius: var(--btn-border-radius);
+  font-size: var(--btn-font-size);
+  cursor: var(--btn-cursor);
+  display: var(--btn-display);
+  align-items: var(--btn-align-items);
+  justify-content: var(--btn-justify-content);
 }
 
 /* ============= SINGLE BUTTON LAYOUT ============= */
@@ -85,16 +104,16 @@
 }
 .one-button-wide {
   width: 75%;
-  height: 80px;
-  background-color: #2C2F48;
-  color: #F5F4F0;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: var(--btn-large-height);
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
+  border: var(--btn-border);
+  border-radius: var(--btn-border-radius);
+  font-size: var(--btn-font-size);
+  cursor: var(--btn-cursor);
+  display: var(--btn-display);
+  align-items: var(--btn-align-items);
+  justify-content: var(--btn-justify-content);
 }
 
 /* ============= SINGLE PLUS PREVIEW =============
@@ -117,16 +136,16 @@
 }
 .single-plus-right {
   width: 65%;
-  height: 80px;
-  background-color: #2C2F48;
-  color: #F5F4F0;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: var(--btn-large-height);
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
+  border: var(--btn-border);
+  border-radius: var(--btn-border-radius);
+  font-size: var(--btn-font-size);
+  cursor: var(--btn-cursor);
+  display: var(--btn-display);
+  align-items: var(--btn-align-items);
+  justify-content: var(--btn-justify-content);
 }
 .video-placeholder {
   width: 100%;

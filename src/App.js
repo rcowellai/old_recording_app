@@ -9,17 +9,18 @@ import React, { useReducer } from 'react';
 import { FaMicrophoneAlt, FaVideo, FaCircle, FaPause, FaPlay } from 'react-icons/fa';
 
 // Configuration
-import { RECORDING_LIMITS } from './config';
-import { LAYOUT, TIME_FORMAT, VIDEO_PLAYER } from './constants/recording';
+import { RECORDING_LIMITS, LAYOUT, TIME_FORMAT, VIDEO_PLAYER } from './config';
 
 // State management
 import { appReducer, initialAppState, APP_ACTIONS } from './reducers/appReducer';
 
 // Extracted components
 import RecordingFlow from './components/RecordingFlow';
-import SubmissionHandler from './components/SubmissionHandler';
 import MediaPlayer from './components/MediaPlayer';
-import NavigationController from './components/NavigationController';
+
+// Utility functions
+import { createSubmissionHandler } from './utils/submissionHandlers';
+import { createNavigationHandlers } from './utils/navigationHandlers';
 
 // Existing components (unchanged)
 import PromptCard from './components/PromptCard';
@@ -62,8 +63,8 @@ function App() {
           actualMimeType,
         } = recordingFlowState;
 
-        // Initialize extracted components
-        const submissionHandler = SubmissionHandler({
+        // Initialize extracted components and utility functions
+        const handleSubmit = createSubmissionHandler({
           recordedBlobUrl,
           captureMode,
           actualMimeType,
@@ -74,7 +75,7 @@ function App() {
 
         const mediaPlayer = MediaPlayer({ appState, dispatch, APP_ACTIONS });
 
-        const navigationController = NavigationController({
+        const navigationHandlers = createNavigationHandlers({
           appState,
           dispatch,
           APP_ACTIONS,
@@ -182,7 +183,7 @@ function App() {
               </>,
               handleResume,
               'Done',
-              navigationController.handleDoneAndSubmitStage
+              navigationHandlers.handleDoneAndSubmitStage
             );
           }
 
@@ -302,14 +303,14 @@ function App() {
                     <button
                       type="button"
                       className="btn-left-lower"
-                      onClick={navigationController.handleStartOverClick}
+                      onClick={navigationHandlers.handleStartOverClick}
                     >
                       Start Over
                     </button>
                     <button
                       type="button"
                       className="btn-right-lower"
-                      onClick={submissionHandler.handleSubmit}
+                      onClick={handleSubmit}
                     >
                       Submit
                     </button>
@@ -321,8 +322,8 @@ function App() {
             {/* Confirm Overlay */}
             {appState.showStartOverConfirm && (
               <ConfirmOverlay
-                onYes={navigationController.handleStartOverYes}
-                onNo={navigationController.handleStartOverNo}
+                onYes={navigationHandlers.handleStartOverYes}
+                onNo={navigationHandlers.handleStartOverNo}
               />
             )}
 

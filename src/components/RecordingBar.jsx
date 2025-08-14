@@ -10,7 +10,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FaPause } from 'react-icons/fa';
-import { COLORS, LAYOUT } from '../constants/recording';
+import { COLORS, LAYOUT } from '../config';
 
 /*
   RecordingBar
