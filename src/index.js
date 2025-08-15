@@ -13,6 +13,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import NiceModal from '@ebay/nice-modal-react';
 
 import App from './App';
 import './styles/index.css';
@@ -21,22 +22,40 @@ import './styles/index.css';
 import ViewRecording from './pages/ViewRecording';
 
 // Import your new AdminPage
-import AdminPage from './pages/AdminPage'; 
+import AdminPage from './pages/AdminPage';
+
+// Import TokenProvider and TokenAdmin
+import { TokenProvider } from './theme/TokenProvider';
+import { LayoutProvider } from './components/layout';
+import TokenAdmin from './pages/TokenAdmin';
+import DemoPage from './pages/DemoPage'; 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        {/* Existing root path => main record/submit flow */}
-        <Route path="/" element={<App />} />
+    <TokenProvider>
+      <LayoutProvider>
+        <NiceModal.Provider>
+          <BrowserRouter>
+            <Routes>
+              {/* Existing root path => main record/submit flow */}
+              <Route path="/" element={<App />} />
 
-        {/* Existing route => playback page */}
-        <Route path="/view/:docId" element={<ViewRecording />} />
+              {/* Existing route => playback page */}
+              <Route path="/view/:docId" element={<ViewRecording />} />
 
-        {/* NEW: Admin route => /admin */}
-        <Route path="/admin" element={<AdminPage />} />
-      </Routes>
-    </BrowserRouter>
+              {/* NEW: Admin route => /admin */}
+              <Route path="/admin" element={<AdminPage />} />
+
+              {/* NEW: Token admin route => /admin/tokens */}
+              <Route path="/admin/tokens" element={<TokenAdmin />} />
+
+              {/* NEW: Demo page => /demo */}
+              <Route path="/demo" element={<DemoPage />} />
+            </Routes>
+          </BrowserRouter>
+        </NiceModal.Provider>
+      </LayoutProvider>
+    </TokenProvider>
   </React.StrictMode>
 );
