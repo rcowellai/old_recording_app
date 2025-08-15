@@ -26,14 +26,11 @@ html, body {
 */
 .card-container {
   width: 100%;
-  /* If you want a narrower card than the container, you could do max-width: 440px here,
-     but typically letting the container define max width is simpler. */
-  
-  margin: 60px 0 12px;  /* top/bottom spacing only */
+  margin: var(--prompt-top-margin) 0 0 0; /* Use CSS variable for consistency */
   box-sizing: border-box;
 
   background-color: #FFFFFF;
-  min-height: 320px;
+  height: 320px; /* Fixed height, no min-height */
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 
@@ -42,7 +39,6 @@ html, body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  position: relative;
   overflow: hidden;
 }
 .card-content {

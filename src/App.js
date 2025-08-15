@@ -32,6 +32,7 @@ import CountdownOverlay from './components/CountdownOverlay';
 import ProgressOverlay from './components/ProgressOverlay';
 import ConfirmOverlay from './components/ConfirmOverlay';
 import ConfettiScreen from './components/confettiScreen';
+import AppBanner from './components/AppBanner';
 
 import './styles/App.css';
 
@@ -197,12 +198,16 @@ function App() {
 
         // Main UI (preserves exact JSX structure from original App.js:353-489)
         return (
-          <div className="page-container">
+          <>
+            <AppBanner logoSize={30} />
+            
+            <div className="page-container">
             {(isRecording || isPaused) && (
               <div
+                className="recording-bar-container"
                 style={{
                   position: 'fixed',
-                  top: '15px',
+                  top: 'calc(var(--banner-height) + 15px)',
                   left: 0,
                   width: '100%',
                   zIndex: 999,
@@ -223,17 +228,8 @@ function App() {
             )}
 
             <div className="main-layout-container">
-              <PromptCard />
-              <div className="bottom-section">
-                <div
-                  className="prompt-link"
-                  style={{
-                    marginTop: LAYOUT.MARGIN_TOP_SMALL,
-                    visibility: mediaStream ? 'hidden' : 'visible',
-                  }}
-                >
-                  Or <a href="#different">choose a different prompt</a>
-                </div>
+              <div className="content-area">
+                <PromptCard />
                 <div
                   className="prompt-info-text"
                   style={{
@@ -242,7 +238,9 @@ function App() {
                 >
                   Choose your recording mode
                 </div>
-                {renderBottomRow()}
+                <div className="bottom-section">
+                  {renderBottomRow()}
+                </div>
               </div>
             </div>
 
@@ -331,7 +329,8 @@ function App() {
             {appState.uploadInProgress && (
               <ProgressOverlay fraction={appState.uploadFraction} />
             )}
-          </div>
+            </div>
+          </>
         );
       }}
     </RecordingFlow>

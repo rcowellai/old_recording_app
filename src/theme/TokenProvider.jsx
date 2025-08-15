@@ -54,6 +54,13 @@ const DEFAULT_TOKENS = {
     borderRadius: '8px',
     cardBorderRadius: '12px'
   },
+  banner: {
+    height: '100px',
+    zIndex: 998,
+    backgroundColor: '#2C2F48',
+    textColor: '#F5F4F0',
+    enabled: true
+  },
   shadows: {
     card: '0 0 10px rgba(0,0,0,0.1)',
     overlay: '0 0 25px rgba(0,0,0,0.2)'
@@ -134,10 +141,23 @@ export const TokenProvider = ({ children }) => {
     root.style.setProperty('--shadow-card', tokens.shadows.card);
     root.style.setProperty('--shadow-overlay', tokens.shadows.overlay);
     
-    // Update body styles for font family
+    // Banner system
+    root.style.setProperty('--banner-height', tokens.banner.height);
+    root.style.setProperty('--banner-z-index', tokens.banner.zIndex);
+    root.style.setProperty('--banner-bg', tokens.banner.backgroundColor);
+    root.style.setProperty('--banner-text', tokens.banner.textColor);
+    
+    // Update body styles for font family and banner state
     document.body.style.fontFamily = tokens.fonts.primary;
     document.body.style.backgroundColor = tokens.colors.primary.bg;
     document.body.style.color = tokens.colors.primary.text;
+    
+    // Toggle banner-active class based on enabled state
+    if (tokens.banner.enabled) {
+      document.body.classList.add('banner-active');
+    } else {
+      document.body.classList.remove('banner-active');
+    }
   }, [tokens]);
 
   // Save tokens to localStorage when they change
@@ -161,6 +181,7 @@ export const TokenProvider = ({ children }) => {
       console.warn('Failed to clear stored tokens:', error);
     }
   };
+
 
   // Export current tokens (for backup/import)
   const exportTokens = () => {

@@ -14,34 +14,50 @@
   min-height: 100vh;
   width: 100%;
   box-sizing: border-box;
+  position: relative;
 }
 
-/* Main layout container => single parent for prompt card & button row */
+/* Main layout container => outer container with padding */
 .main-layout-container {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  padding: 24px 16px;
+  padding: 24px 16px; /* Container padding */
   box-sizing: border-box;
+  position: relative;
+  min-height: calc(100vh - var(--banner-height));
 }
 
-/* bottom-section => keeps the buttons from jumping around */
-.bottom-section {
+/* Content area wrapper => ensures all content uses same horizontal boundaries */
+.content-area {
+  position: relative;
   width: 100%;
-  min-height: 220px;
+  height: 100%;
+  min-height: calc(100vh - var(--banner-height) - 48px); /* Account for container padding */
+}
+
+/* Fixed positioning system within content area */
+.bottom-section {
+  position: absolute;
+  bottom: var(--button-bottom-gap); /* Use CSS variable for easy adjustment */
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
 }
 
-/* Additional text if needed below the prompt card */
+/* Dynamic equidistant positioning - independent of button container */
 .prompt-info-text {
-  margin-top: 30px;
-  margin-bottom: 40px;
+  position: absolute;
+  /* True midpoint between prompt bottom and button TOP */
+  top: calc((var(--prompt-top-margin) + var(--prompt-height) + 100vh - var(--banner-height) - 48px - var(--button-bottom-gap)) / 2);
+  left: 0;
+  right: 0;
   font-size: 1rem;
   color: #666;
   text-align: center;
+  margin: 0;
 }
 
 /* ============= CSS CUSTOM PROPERTIES ============= */
@@ -61,6 +77,18 @@
   --btn-secondary-color: #2C2F48;
   
   --btn-large-height: 80px;
+  
+  /* Banner system defaults */
+  --banner-height: 0px;
+  --banner-z-index: 998;
+  --banner-bg: #2C2F48;
+  --banner-text: #F5F4F0;
+  
+  /* Spacing control variables */
+  --prompt-top-margin: 30px;  /* Distance from banner to prompt */
+  --button-bottom-gap: 40px;  /* Distance from buttons to screen bottom */
+  --prompt-height: 320px;     /* Prompt box height */
+  --button-height: 80px;      /* Button area height */
 }
 
 /* ============= TWO-BUTTON LAYOUT ============= */
@@ -154,6 +182,32 @@
   border-radius: 8px;
 }
 
+/* ============= BANNER SYSTEM ============= */
+/* Top banner container */
+.app-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--banner-height);
+  background-color: var(--banner-bg);
+  color: var(--banner-text);
+  z-index: var(--banner-z-index);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0 16px;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* Banner-active state adjustments */
+.banner-active .page-container {
+  padding-top: var(--banner-height);
+  box-sizing: border-box;
+}
+
 /* ---------------- Overlays ---------------- */
 
 /* Countdown Overlay */
@@ -168,6 +222,14 @@
   justify-content: center;
   align-items: center;
   z-index: 9998;
+}
+
+/* Banner-active overlay adjustments */
+.banner-active .countdown-overlay,
+.banner-active .submit-overlay,
+.banner-active .confirm-overlay {
+  top: var(--banner-height);
+  height: calc(100% - var(--banner-height));
 }
 .countdown-text {
   font-size: 7rem;
