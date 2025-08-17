@@ -207,15 +207,17 @@ function App() {
                 className="recording-bar-container"
                 style={{
                   position: 'fixed',
-                  top: 'calc(var(--banner-height) + 15px)',
-                  left: 0,
-                  width: '100%',
+                  top: 'calc(var(--banner-height) + 30px)',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '97%',
+                  maxWidth: '448px', // 480px - 32px (accounting for 16px padding on each side)
                   zIndex: 999,
                   display: 'flex',
                   justifyContent: 'center',
                 }}
               >
-                <div style={{ maxWidth: LAYOUT.MAX_WIDTH, width: '100%', padding: LAYOUT.RECORDING_BAR_PADDING }}>
+                <div style={{ width: '100%', padding: '0 16px' }}>
                   <RecordingBar
                     elapsedSeconds={elapsedSeconds}
                     totalSeconds={RECORDING_LIMITS.MAX_DURATION_SECONDS}
@@ -227,20 +229,23 @@ function App() {
               </div>
             )}
 
-            <div className="main-layout-container">
-              <div className="content-area">
+            <div className="app-layout">
+              <div className="banner-section">
+                <AppBanner logoSize={30} />
+              </div>
+              <div className="prompt-section">
                 <PromptCard />
-                <div
-                  className="prompt-info-text"
-                  style={{
-                    visibility: mediaStream ? 'hidden' : 'visible',
-                  }}
-                >
-                  Choose your recording mode
-                </div>
-                <div className="bottom-section">
-                  {renderBottomRow()}
-                </div>
+              </div>
+              <div 
+                className="spacing-section"
+                style={{
+                  visibility: mediaStream ? 'hidden' : 'visible',
+                }}
+              >
+                Choose your recording mode
+              </div>
+              <div className="actions-section">
+                {renderBottomRow()}
               </div>
             </div>
 

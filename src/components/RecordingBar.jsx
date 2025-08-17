@@ -92,7 +92,7 @@ function RecordingBar({
     );
   }
 
-  // Overall container => matches the .main-layout-container width
+  // Overall container => matches the prompt box width
   const containerStyle = {
     color: COLORS.INACTIVE_GRAY,
     width: '100%',
@@ -101,8 +101,8 @@ function RecordingBar({
     justifyContent: 'space-between',
     alignItems: 'center',
     fontSize: '0.805rem',
-    marginBottom: '12px',
-    marginTop: LAYOUT.MARGIN_TOP_MEDIUM,
+    marginBottom: '8px', // Reduced to provide comfortable spacing above prompt
+    marginTop: '0', // No top margin needed as position is controlled by container
   };
 
   return (

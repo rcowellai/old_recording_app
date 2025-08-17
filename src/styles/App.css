@@ -17,47 +17,85 @@
   position: relative;
 }
 
-/* Main layout container => outer container with padding */
-.main-layout-container {
+/* CSS Grid layout => exact constraint system */
+.app-layout {
+  display: grid;
+  grid-template-areas:
+    "banner"
+    "prompt"
+    "spacing"
+    "actions";
+  grid-template-rows:
+    100px        /* Fixed banner */
+    auto         /* Fixed prompt + 30px margin */
+    1fr          /* Dynamic spacing for text centering */
+    80px;        /* Fixed button height */
+  height: min(100vh, 700px); /* Respect both viewport and max height limit */
   width: 100%;
   max-width: 480px;
-  margin: 0 auto;
-  padding: 24px 16px; /* Container padding */
+  margin: 0 auto; /* Desktop centering */
   box-sizing: border-box;
-  position: relative;
-  min-height: calc(100vh - var(--banner-height));
 }
 
-/* Content area wrapper => ensures all content uses same horizontal boundaries */
-.content-area {
-  position: relative;
+/* Grid area assignments */
+.banner-section {
+  grid-area: banner;
+  /* Banner remains fixed positioned for overlay compatibility */
+}
+
+.prompt-section {
+  grid-area: prompt;
   width: 100%;
-  height: 100%;
-  min-height: calc(100vh - var(--banner-height) - 48px); /* Account for container padding */
+  padding: var(--prompt-top-margin) 16px 0 16px; /* 30px top + side padding */
+  box-sizing: border-box;
 }
 
-/* Fixed positioning system within content area */
-.bottom-section {
-  position: absolute;
-  bottom: var(--button-bottom-gap); /* Use CSS variable for easy adjustment */
-  left: 0;
-  right: 0;
+.spacing-section {
+  grid-area: spacing;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.actions-section {
+  grid-area: actions;
+  width: 100%;
+  padding: 0 16px 20px 16px; /* Added 20px bottom padding from buttons to screen edge */
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end; /* Changed to flex-end to push buttons up from bottom */
+  box-sizing: border-box;
 }
 
-/* Dynamic equidistant positioning - independent of button container */
-.prompt-info-text {
-  position: absolute;
-  /* True midpoint between prompt bottom and button TOP */
-  top: calc((var(--prompt-top-margin) + var(--prompt-height) + 100vh - var(--banner-height) - 48px - var(--button-bottom-gap)) / 2);
-  left: 0;
-  right: 0;
-  font-size: 1rem;
-  color: #666;
-  text-align: center;
-  margin: 0;
+/* ============= RESPONSIVE GRID ============= */
+/* Mobile screens - ensure no scrolling */
+@media (max-height: 667px) {
+  .app-layout {
+    max-height: 100vh; /* Use full viewport on small screens */
+    min-height: 100vh;
+  }
+}
+
+/* Very small screens - minimal spacing */
+@media (max-height: 600px) {
+  .prompt-section {
+    padding-top: 20px; /* Reduce top margin on very small screens */
+  }
+}
+
+/* Desktop optimization */
+@media (min-width: 768px) {
+  .app-layout {
+    /* Container already centered with margin: 0 auto */
+    /* Grid handles all internal spacing */
+  }
 }
 
 /* ============= CSS CUSTOM PROPERTIES ============= */
@@ -202,9 +240,9 @@
   font-size: 1rem;
 }
 
-/* Banner-active state adjustments */
+/* Banner-active state adjustments - grid layout compatibility */
 .banner-active .page-container {
-  padding-top: var(--banner-height);
+  /* Grid layout handles banner spacing internally */
   box-sizing: border-box;
 }
 
