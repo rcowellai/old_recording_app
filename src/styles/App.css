@@ -396,7 +396,8 @@
   color: #F5F4F0;
 }
 
-/* Confirm Overlay */
+/* LEGACY Confirm Overlay - Replaced by RadixStartOverDialog */
+/*
 .confirm-overlay {
   position: fixed;
   top: 0;
@@ -438,6 +439,9 @@
   background-color: #E4E2D8;
   color: #2C2F48;
 }
+*/
+
+/* Radix Start Over Dialog - Responsive behavior handled in component */
 
 /* Confetti Screen */
 .confetti-screen {

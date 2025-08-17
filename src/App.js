@@ -5,11 +5,11 @@
  * Refactored to use useReducer and extracted components while preserving exact UI behavior.
  */
 
-import React, { useReducer } from 'react';
+import React, { useReducer, useState } from 'react';
 import { FaMicrophoneAlt, FaVideo, FaCircle, FaPause, FaPlay } from 'react-icons/fa';
 
 // Configuration
-import { RECORDING_LIMITS, LAYOUT, TIME_FORMAT, VIDEO_PLAYER } from './config';
+import { RECORDING_LIMITS, TIME_FORMAT, VIDEO_PLAYER } from './config';
 
 // State management
 import { appReducer, initialAppState, APP_ACTIONS } from './reducers/appReducer';
@@ -30,7 +30,7 @@ import AudioRecorder from './components/AudioRecorder';
 import AudioPlayback from './components/AudioPlayback';
 import CountdownOverlay from './components/CountdownOverlay';
 import ProgressOverlay from './components/ProgressOverlay';
-import ConfirmOverlay from './components/ConfirmOverlay';
+import RadixStartOverDialog from './components/RadixStartOverDialog';
 import ConfettiScreen from './components/confettiScreen';
 import AppBanner from './components/AppBanner';
 
@@ -39,6 +39,9 @@ import './styles/App.css';
 function App() {
   // Replace multiple useState with useReducer
   const [appState, dispatch] = useReducer(appReducer, initialAppState);
+  
+  // Radix Dialog state for Start Over confirmation
+  const [showStartOverDialog, setShowStartOverDialog] = useState(false);
 
   return (
     <RecordingFlow 
@@ -81,7 +84,8 @@ function App() {
           dispatch,
           APP_ACTIONS,
           handleDone,
-          setCaptureMode
+          setCaptureMode,
+          setShowStartOverDialog
         });
 
         // Format Time utility (using constants for maintainability)
@@ -322,13 +326,13 @@ function App() {
               </div>
             )}
 
-            {/* Confirm Overlay */}
-            {appState.showStartOverConfirm && (
-              <ConfirmOverlay
-                onYes={navigationHandlers.handleStartOverYes}
-                onNo={navigationHandlers.handleStartOverNo}
-              />
-            )}
+            {/* Start Over Dialog */}
+            <RadixStartOverDialog
+              open={showStartOverDialog}
+              onOpenChange={setShowStartOverDialog}
+              onConfirm={navigationHandlers.handleStartOverConfirm}
+              onCancel={() => setShowStartOverDialog(false)}
+            />
 
             {/* Upload Overlay => progress */}
             {appState.uploadInProgress && (

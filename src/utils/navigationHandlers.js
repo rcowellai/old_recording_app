@@ -6,8 +6,7 @@
  * Updated to use modern modal system.
  */
 
-import NiceModal from '@ebay/nice-modal-react';
-import FixedConfirmModal from '../components/modals/FixedConfirmModal';
+// Modal imports removed - now using Radix Dialog directly in App.js
 
 /**
  * Creates navigation handler functions
@@ -19,39 +18,31 @@ export function createNavigationHandlers({
   dispatch, 
   APP_ACTIONS,
   handleDone,
-  setCaptureMode 
+  setCaptureMode,
+  setShowStartOverDialog
 }) {
   
-  // "Start Over" Flow - Now using debug modal system for troubleshooting
-  const handleStartOverClick = async () => {
+  // "Start Over" Flow - Now using Radix Dialog
+  const handleStartOverClick = () => {
     console.log('🚀 Start Over button clicked');
-    try {
-      console.log('📱 Showing modal...');
-      const confirmed = await NiceModal.show(FixedConfirmModal, {
-        title: "Start Over?",
-        message: "Are you sure you want to start over? This will discard your current recording.",
-        confirmText: "Yes, Start Over",
-        cancelText: "Cancel",
-        variant: "warning"
-      });
-      
-      console.log('✨ Modal resolved with:', confirmed);
-      
-      if (confirmed) {
-        // Execute the same logic as handleStartOverYes
-        handleDone();
-        dispatch({ type: APP_ACTIONS.SET_SUBMIT_STAGE, payload: false });
-        dispatch({ type: APP_ACTIONS.SET_SHOW_CONFETTI, payload: false });
-        dispatch({ type: APP_ACTIONS.SET_DOC_ID, payload: null });
-        dispatch({ type: APP_ACTIONS.SET_UPLOAD_IN_PROGRESS, payload: false });
-        dispatch({ type: APP_ACTIONS.SET_UPLOAD_FRACTION, payload: 0 });
-        
-        // Reset captureMode so user sees Audio/Video choice
-        setCaptureMode(null);
-      }
-    } catch (error) {
-      console.warn('Modal was cancelled or errored:', error);
-    }
+    console.log('📱 Showing Radix dialog...');
+    setShowStartOverDialog(true);
+  };
+
+  // Handle the actual start over confirmation
+  const handleStartOverConfirm = () => {
+    console.log('✨ Start over confirmed');
+    
+    // Execute the same reset logic as before
+    handleDone();
+    dispatch({ type: APP_ACTIONS.SET_SUBMIT_STAGE, payload: false });
+    dispatch({ type: APP_ACTIONS.SET_SHOW_CONFETTI, payload: false });
+    dispatch({ type: APP_ACTIONS.SET_DOC_ID, payload: null });
+    dispatch({ type: APP_ACTIONS.SET_UPLOAD_IN_PROGRESS, payload: false });
+    dispatch({ type: APP_ACTIONS.SET_UPLOAD_FRACTION, payload: 0 });
+    
+    // Reset captureMode so user sees Audio/Video choice
+    setCaptureMode(null);
   };
 
   // Keep legacy handlers for backward compatibility during transition
@@ -81,6 +72,7 @@ export function createNavigationHandlers({
 
   return {
     handleStartOverClick,
+    handleStartOverConfirm,
     handleStartOverYes, 
     handleStartOverNo,
     handleDoneAndSubmitStage

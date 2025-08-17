@@ -1,9 +1,13 @@
 /**
  * ConfirmOverlay.jsx
  * ------------------
- * A simple modal overlay for confirming actions like
+ * LEGACY: A simple modal overlay for confirming actions like
  * "Are you sure you want to start over?" or other
- * user confirmations. 
+ * user confirmations.
+ * 
+ * NOTE: This component has been replaced by RadixStartOverDialog
+ * and is no longer used in the Start Over flow. Safe to remove
+ * if no other components depend on it.
  */
 
 import React from 'react';
