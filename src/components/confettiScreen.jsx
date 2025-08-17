@@ -13,36 +13,17 @@ import Confetti from 'react-confetti';
 function ConfettiScreen({ docId }) {
   return (
     <div className="confetti-container">
-      <Confetti />
+      <Confetti 
+        gravity={0.05}
+        wind={0.005}
+        initialVelocityY={1}
+        numberOfPieces={120}
+      />
       
       <div className="confetti-content">
-        <div className="confetti-card">
-          <div className="confetti-header">
-            <div className="confetti-title">🎉 Recording Uploaded!</div>
-          </div>
-          
-          <div className="confetti-body">
-            <p className="confetti-message">
-              Your memory has been successfully recorded and saved.
-            </p>
-            
-            <div className="confetti-actions">
-              <a 
-                href={`/view/${docId}`}
-                className="btn-view-recording"
-              >
-                View Recording
-              </a>
-              
-              <button 
-                className="btn-new-recording"
-                onClick={() => window.location.href = '/'}
-              >
-                Record Another Memory
-              </button>
-            </div>
-          </div>
-        </div>
+        <div className="confetti-main-title">Memory Saved</div>
+        <div className="confetti-subtitle-line">Your story is being crafted</div>
+        <div className="confetti-subtitle-line">It will be available to read in the 'My Stories' section shortly.</div>
       </div>
     </div>
   );

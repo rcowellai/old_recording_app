@@ -6,7 +6,7 @@
  */
 
 import React, { useReducer, useState, useCallback, useEffect } from 'react';
-import { FaMicrophoneAlt, FaVideo, FaCircle, FaPause, FaPlay } from 'react-icons/fa';
+import { FaMicrophoneAlt, FaVideo, FaCircle, FaPause, FaPlay, FaUndo, FaCloudUploadAlt } from 'react-icons/fa';
 
 // Configuration
 import { RECORDING_LIMITS, TIME_FORMAT } from './config';
@@ -112,9 +112,15 @@ function App() {
         // Render Helpers (preserves exact logic from original App.js:252-348)
         function renderReviewButtons() {
           return renderTwoButtonRow(
-            'Start Over',
+            <>
+              <FaUndo style={{ marginRight: '8px', fontSize: '1em' }} />
+              Start Over
+            </>,
             navigationHandlers.handleStartOverClick,
-            'Submit Recording',
+            <>
+              <FaCloudUploadAlt style={{ marginRight: '8px', fontSize: '1em' }} />
+              Submit Recording
+            </>,
             handleSubmit
           );
         }
