@@ -25,5 +25,3 @@ export {
   useLayout
 } from './LayoutProvider';
 
-// Pre-built layout compositions
-export { default as ScreenLayouts } from './ScreenLayouts';

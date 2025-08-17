@@ -12,7 +12,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { RECORDING_LIMITS } from '../config';
+import { RECORDING_LIMITS, SUPPORTED_FORMATS } from '../config';
 import useCountdown from './useCountdown';
 import { createError, UPLOAD_ERRORS } from '../utils/errors';
 
@@ -111,24 +111,14 @@ export default function useRecordingFlow() {
     recordedChunksRef.current = [];
 
     let options = {};
-    // Decide on best possible format based on captureMode
+    // Decide on best possible format based on captureMode using config constants
     if (window.MediaRecorder && typeof MediaRecorder.isTypeSupported === 'function') {
-      if (captureMode === 'video') {
-        // Video first tries mp4/h264, else fallback to webm/vp8
-        if (MediaRecorder.isTypeSupported('video/mp4;codecs=h264')) {
-          options = { mimeType: 'video/mp4;codecs=h264' };
-        } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
-          options = { mimeType: 'video/webm;codecs=vp8,opus' };
-        }
-      } else {
-        // Audio => prefer AAC in MP4, else fallback to WebM/Opus
-        if (MediaRecorder.isTypeSupported('audio/mp4;codecs=aac')) {
-          options = { mimeType: 'audio/mp4;codecs=aac' };
-        } else if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-          options = { mimeType: 'audio/webm;codecs=opus' };
-        } else {
-          console.warn('No supported audio MIME type found, using default');
-        }
+      const formats = SUPPORTED_FORMATS[captureMode];
+      const supportedType = formats?.find(type => MediaRecorder.isTypeSupported(type));
+      if (supportedType) {
+        options = { mimeType: supportedType };
+      } else if (captureMode === 'audio') {
+        console.warn('No supported audio MIME type found, using default');
       }
     }
 

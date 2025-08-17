@@ -29,36 +29,6 @@ export const SUPPORTED_FORMATS = {
   ]
 };
 
-// File extensions mapped to MIME types
-export const FILE_EXTENSIONS = {
-  video: {
-    'mp4': 'mp4',
-    'webm': 'webm',
-    default: 'webm'
-  },
-  audio: {
-    'mp4': 'm4a', // AAC-based recordings use .m4a
-    'webm': 'webm', 
-    default: 'webm'
-  }
-};
-
-// UI timing and animation constants (deprecated - use LAYOUT instead)
-export const UI_CONSTANTS = {
-  // Layout spacing (commonly used values) - DEPRECATED: use LAYOUT.MARGIN_* instead
-  MARGINS: {
-    TOP_SMALL: 10,
-    TOP_MEDIUM: 30,
-    BOTTOM_MEDIUM: 40
-  },
-  
-  // Recording bar positioning - DEPRECATED: use LAYOUT.* instead
-  RECORDING_BAR: {
-    TOP_OFFSET: 15,
-    MAX_WIDTH: 480,
-    PADDING: '0 16px'
-  }
-};
 
 // Canvas dimensions for AudioRecorder component
 export const CANVAS = {
@@ -110,12 +80,6 @@ export const AUDIO_ANALYSIS = {
   CENTERING_OFFSET: 1.0
 };
 
-// Video player constants
-export const VIDEO_PLAYER = {
-  IOS_TIME_FIX: 0.001,
-  SLIDER_STEP: 0.1,
-  SLIDER_MIN: 0
-};
 
 // Environment configuration
 export const ENV_CONFIG = {

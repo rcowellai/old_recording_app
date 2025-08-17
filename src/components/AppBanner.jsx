@@ -49,83 +49,10 @@ const AppBanner = ({
   );
 };
 
-/**
- * BannerControl Component
- * Provides toggle and configuration controls for the banner
- */
-export const BannerControl = ({ className = '' }) => {
-  const { tokens, enableBanner, disableBanner, updateBannerConfig } = useTokens();
-
-  const handleToggle = () => {
-    if (tokens.banner.enabled) {
-      disableBanner();
-    } else {
-      enableBanner();
-    }
-  };
-
-  const handleHeightChange = (e) => {
-    const height = e.target.value + 'px';
-    updateBannerConfig({ height });
-  };
-
-  const handleColorChange = (e) => {
-    updateBannerConfig({ backgroundColor: e.target.value });
-  };
-
-  return (
-    <div className={`banner-control ${className}`.trim()}>
-      <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <input
-            type="checkbox"
-            checked={tokens.banner.enabled}
-            onChange={handleToggle}
-          />
-          Enable Banner
-        </label>
-      </div>
-
-      {tokens.banner.enabled && (
-        <>
-          <div style={{ marginBottom: '12px' }}>
-            <label style={{ display: 'block', marginBottom: '4px' }}>
-              Height: {parseInt(tokens.banner.height)}px
-            </label>
-            <input
-              type="range"
-              min="50"
-              max="200"
-              value={parseInt(tokens.banner.height)}
-              onChange={handleHeightChange}
-              style={{ width: '100%' }}
-            />
-          </div>
-
-          <div style={{ marginBottom: '12px' }}>
-            <label style={{ display: 'block', marginBottom: '4px' }}>
-              Background Color:
-            </label>
-            <input
-              type="color"
-              value={tokens.banner.backgroundColor}
-              onChange={handleColorChange}
-            />
-          </div>
-        </>
-      )}
-    </div>
-  );
-};
-
 AppBanner.propTypes = {
   logoSize: PropTypes.number,
   className: PropTypes.string,
   style: PropTypes.object
-};
-
-BannerControl.propTypes = {
-  className: PropTypes.string
 };
 
 export default AppBanner;
