@@ -20,9 +20,11 @@ function RecordingFlow({
   // Auto-transition at max duration (preserves exact logic from App.js:97-101)
   useEffect(() => {
     if (elapsedSeconds >= RECORDING_LIMITS.MAX_DURATION_SECONDS && isRecording && !isPaused) {
+      // Stop recording first, then trigger submit stage
+      recordingFlowState.handleDone();
       onDoneAndSubmitStage();
     }
-  }, [elapsedSeconds, isRecording, isPaused, onDoneAndSubmitStage]);
+  }, [elapsedSeconds, isRecording, isPaused, onDoneAndSubmitStage, recordingFlowState]);
 
   // Pass recording state to children via render prop pattern
   return children(recordingFlowState);

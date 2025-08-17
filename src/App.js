@@ -5,18 +5,17 @@
  * Refactored to use useReducer and extracted components while preserving exact UI behavior.
  */
 
-import React, { useReducer, useState } from 'react';
+import React, { useReducer, useState, useCallback, useEffect } from 'react';
 import { FaMicrophoneAlt, FaVideo, FaCircle, FaPause, FaPlay } from 'react-icons/fa';
 
 // Configuration
-import { RECORDING_LIMITS, TIME_FORMAT, VIDEO_PLAYER } from './config';
+import { RECORDING_LIMITS, TIME_FORMAT } from './config';
 
 // State management
 import { appReducer, initialAppState, APP_ACTIONS } from './reducers/appReducer';
 
 // Extracted components
 import RecordingFlow from './components/RecordingFlow';
-import MediaPlayer from './components/MediaPlayer';
 
 // Utility functions
 import { createSubmissionHandler } from './utils/submissionHandlers';
@@ -27,10 +26,10 @@ import PromptCard from './components/PromptCard';
 import RecordingBar from './components/RecordingBar';
 import VideoPreview from './components/VideoPreview';
 import AudioRecorder from './components/AudioRecorder';
-import AudioPlayback from './components/AudioPlayback';
 import CountdownOverlay from './components/CountdownOverlay';
 import ProgressOverlay from './components/ProgressOverlay';
 import RadixStartOverDialog from './components/RadixStartOverDialog';
+import PlyrMediaPlayer from './components/PlyrMediaPlayer';
 import ConfettiScreen from './components/confettiScreen';
 import AppBanner from './components/AppBanner';
 
@@ -42,10 +41,25 @@ function App() {
   
   // Radix Dialog state for Start Over confirmation
   const [showStartOverDialog, setShowStartOverDialog] = useState(false);
+  
+  // Player ready state for loading handling
+  const [isPlayerReady, setIsPlayerReady] = useState(false);
+
+  // Reset player ready state when entering review mode
+  useEffect(() => {
+    if (appState.submitStage) {
+      setIsPlayerReady(false);
+    }
+  }, [appState.submitStage]);
+
+  // Create auto-transition handler that will be passed to RecordingFlow
+  const handleAutoTransition = useCallback(() => {
+    dispatch({ type: APP_ACTIONS.SET_SUBMIT_STAGE, payload: true });
+  }, [dispatch]);
 
   return (
     <RecordingFlow 
-      onDoneAndSubmitStage={() => dispatch({ type: APP_ACTIONS.SET_SUBMIT_STAGE, payload: true })}
+      onDoneAndSubmitStage={handleAutoTransition}
     >
       {(recordingFlowState) => {
         const {
@@ -77,15 +91,14 @@ function App() {
           APP_ACTIONS
         });
 
-        const mediaPlayer = MediaPlayer({ appState, dispatch, APP_ACTIONS });
-
         const navigationHandlers = createNavigationHandlers({
           appState,
           dispatch,
           APP_ACTIONS,
           handleDone,
           setCaptureMode,
-          setShowStartOverDialog
+          setShowStartOverDialog,
+          setIsPlayerReady
         });
 
         // Format Time utility (using constants for maintainability)
@@ -97,6 +110,15 @@ function App() {
         };
 
         // Render Helpers (preserves exact logic from original App.js:252-348)
+        function renderReviewButtons() {
+          return renderTwoButtonRow(
+            'Start Over',
+            navigationHandlers.handleStartOverClick,
+            'Submit Recording',
+            handleSubmit
+          );
+        }
+
         function renderTwoButtonRow(leftText, leftOnClick, rightText, rightOnClick) {
           return (
             <div className="two-button-row">
@@ -238,92 +260,42 @@ function App() {
                 <AppBanner logoSize={30} />
               </div>
               <div className="prompt-section">
-                <PromptCard />
+                {!appState.submitStage ? (
+                  <PromptCard />
+                ) : !recordedBlobUrl ? (
+                  <div className="review-content">
+                    <div className="review-title">Review your recording</div>
+                    <div className="loading-message">Preparing your recording...</div>
+                  </div>
+                ) : (
+                  <div className="review-content">
+                    <div className="review-title">Review your recording</div>
+                    <PlyrMediaPlayer
+                      src={recordedBlobUrl}
+                      type={captureMode}
+                      actualMimeType={actualMimeType}
+                      onReady={() => setIsPlayerReady(true)}
+                      className="inline-media-player"
+                    />
+                  </div>
+                )}
               </div>
               <div 
                 className="spacing-section"
                 style={{
-                  visibility: mediaStream ? 'hidden' : 'visible',
+                  visibility: (mediaStream || appState.submitStage) ? 'hidden' : 'visible',
                 }}
               >
                 Choose your recording mode
               </div>
               <div className="actions-section">
-                {renderBottomRow()}
+                {appState.submitStage ? renderReviewButtons() : renderBottomRow()}
               </div>
             </div>
 
             {/* Countdown Overlay */}
             {countdownActive && (
               <CountdownOverlay countdownValue={countdownValue} />
-            )}
-
-            {/* Submit Overlay */}
-            {appState.submitStage && (
-              <div className="submit-overlay">
-                <div className="submit-card">
-                  <div className="submit-header">
-                    <div className="submit-title">Submit your recording</div>
-                  </div>
-
-                  {/* Video Submission */}
-                  {captureMode === 'video' && recordedBlobUrl && (
-                    <div className="video-frame">
-                      <video
-                        ref={mediaPlayer.playbackRef}
-                        src={recordedBlobUrl}
-                        preload="metadata"
-                        onLoadedMetadata={mediaPlayer.handleLoadedMetadata}
-                        onTimeUpdate={mediaPlayer.handleTimeUpdate}
-                        playsInline
-                      />
-                      <div className="custom-player-region">
-                        <div className="player-controls">
-                          <div className="player-left-control">
-                            <button type="button" onClick={mediaPlayer.handleTogglePlay}>
-                              {mediaPlayer.isPlaying ? <FaPause /> : <FaPlay />}
-                            </button>
-                          </div>
-                          <input
-                            className="player-slider"
-                            type="range"
-                            min="0"
-                            max={mediaPlayer.duration}
-                            step={VIDEO_PLAYER.SLIDER_STEP}
-                            value={mediaPlayer.currentTime}
-                            onChange={mediaPlayer.handleSeek}
-                          />
-                          <div className="player-right-time">
-                            {mediaPlayer.formatTime(mediaPlayer.currentTime)} / {mediaPlayer.formatTime(mediaPlayer.duration)}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Audio Submission */}
-                  {captureMode === 'audio' && recordedBlobUrl && (
-                    <AudioPlayback audioSrc={recordedBlobUrl} />
-                  )}
-
-                  <div className="submit-footer">
-                    <button
-                      type="button"
-                      className="btn-left-lower"
-                      onClick={navigationHandlers.handleStartOverClick}
-                    >
-                      Start Over
-                    </button>
-                    <button
-                      type="button"
-                      className="btn-right-lower"
-                      onClick={handleSubmit}
-                    >
-                      Submit
-                    </button>
-                  </div>
-                </div>
-              </div>
             )}
 
             {/* Start Over Dialog */}

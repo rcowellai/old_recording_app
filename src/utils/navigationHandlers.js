@@ -19,7 +19,8 @@ export function createNavigationHandlers({
   APP_ACTIONS,
   handleDone,
   setCaptureMode,
-  setShowStartOverDialog
+  setShowStartOverDialog,
+  setIsPlayerReady
 }) {
   
   // "Start Over" Flow - Now using Radix Dialog
@@ -33,13 +34,16 @@ export function createNavigationHandlers({
   const handleStartOverConfirm = () => {
     console.log('✨ Start over confirmed');
     
-    // Execute the same reset logic as before
+    // Execute the reset logic for inline review mode
     handleDone();
     dispatch({ type: APP_ACTIONS.SET_SUBMIT_STAGE, payload: false });
     dispatch({ type: APP_ACTIONS.SET_SHOW_CONFETTI, payload: false });
     dispatch({ type: APP_ACTIONS.SET_DOC_ID, payload: null });
     dispatch({ type: APP_ACTIONS.SET_UPLOAD_IN_PROGRESS, payload: false });
     dispatch({ type: APP_ACTIONS.SET_UPLOAD_FRACTION, payload: 0 });
+    
+    // Reset player state
+    setIsPlayerReady(false);
     
     // Reset captureMode so user sees Audio/Video choice
     setCaptureMode(null);
@@ -64,7 +68,7 @@ export function createNavigationHandlers({
     dispatch({ type: APP_ACTIONS.SET_SHOW_START_OVER_CONFIRM, payload: false });
   };
 
-  // "Done" => Move to Submit Stage (preserves exact logic from App.js:89-92)
+  // "Done" => Move to Submit Stage (inline review mode)
   const handleDoneAndSubmitStage = () => {
     handleDone();
     dispatch({ type: APP_ACTIONS.SET_SUBMIT_STAGE, payload: true });

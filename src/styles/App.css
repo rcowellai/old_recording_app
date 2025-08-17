@@ -127,6 +127,26 @@
   --button-bottom-gap: 40px;  /* Distance from buttons to screen bottom */
   --prompt-height: 320px;     /* Prompt box height */
   --button-height: 80px;      /* Button area height */
+  
+  /* Plyr.js Design Token Integration */
+  --plyr-color-main: #2C2F48;                    /* App primary color */
+  --plyr-video-control-color: #FFFFFF;           /* Video control text/icons */
+  --plyr-video-control-color-hover: #F5F4F0;     /* Video control hover */
+  --plyr-video-control-background-hover: transparent; /* Disable hover background */
+  --plyr-audio-control-color: #2C2F48;           /* Audio control text/icons */
+  --plyr-audio-control-color-hover: #FFFFFF;     /* Audio control hover */
+  --plyr-audio-control-background-hover: transparent; /* Disable hover background */
+  --plyr-menu-background: #FFFFFF;               /* Settings menu background */
+  --plyr-menu-color: #2C2F48;                    /* Menu text color */
+  --plyr-menu-border-color: #E4E2D8;             /* Menu borders */
+  --plyr-menu-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  --plyr-menu-radius: 8px;                       /* Consistent border radius */
+  --plyr-range-thumb-background: #2C2F48;        /* Scrubber handle */
+  --plyr-range-thumb-height: 16px;               /* Larger touch target */
+  --plyr-range-track-height: 6px;                /* Thicker progress track */
+  --plyr-progress-loading-background: rgba(44, 47, 72, 0.3);
+  --plyr-video-progress-buffered-background: rgba(255, 255, 255, 0.4);
+  --plyr-audio-progress-buffered-background: rgba(228, 226, 216, 0.6);
 }
 
 /* ============= TWO-BUTTON LAYOUT ============= */
@@ -264,7 +284,6 @@
 
 /* Banner-active overlay adjustments */
 .banner-active .countdown-overlay,
-.banner-active .submit-overlay,
 .banner-active .confirm-overlay {
   top: var(--banner-height);
   height: calc(100% - var(--banner-height));
@@ -276,125 +295,7 @@
   text-align: center;
 }
 
-/* Submit Overlay */
-.submit-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(228,226,216,0.93);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-.submit-card {
-  width: calc(100% - 32px);
-  max-width: 600px;
-  padding: 16px 16px 20px;
-  box-sizing: border-box;
-  background-color: #FFFFFF;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-}
-.submit-header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.submit-title {
-  font-size: 0.9rem;
-  font-weight: 500;
-  line-height: 1.2;
-  margin: 0;
-  padding: 0;
-  color: #2C2F48;
-}
-.video-frame {
-  width: 100%;
-  border: 1px solid #DDD;
-  border-radius: 8px;
-  padding: 12px;
-  margin-top: 16px;
-  box-sizing: border-box;
-  background-color: transparent;
-}
-.video-frame video {
-  display: block;
-  width: 100%;
-  max-height: 220px;
-  border-radius: 8px;
-  background-color: transparent;
-}
-.custom-player-region {
-  width: 100%;
-  margin-top: 8px;
-}
-.player-controls {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  gap: 0;
-  flex-wrap: nowrap;
-}
-.player-left-control {
-  width: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-.player-left-control button {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  color: #2C2F48;
-  font-size: 1rem;
-}
-.player-slider {
-  flex: 1;
-  margin: 0 8px;
-}
-.player-right-time {
-  width: 55px;
-  font-size: 0.7rem;
-  white-space: nowrap;
-  text-align: right;
-  margin-right: 0;
-}
-.submit-footer {
-  margin-top: 32px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  gap: 0;
-}
-.btn-left-lower,
-.btn-right-lower {
-  width: 45%;
-  height: 60px;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.btn-left-lower {
-  background-color: #E4E2D8;
-  color: #2C2F48;
-}
-.btn-right-lower {
-  background-color: #2C2F48;
-  color: #F5F4F0;
-}
+/* LEGACY Submit Overlay - Replaced by RadixMediaReviewDialog */
 
 /* LEGACY Confirm Overlay - Replaced by RadixStartOverDialog */
 /*
@@ -460,4 +361,122 @@
 
 video {
   overflow: hidden;
+}
+
+/* ============= PLYR.JS FOCUS OVERRIDE ============= */
+/* Global fix for Plyr.js focus/active/hover blue box issue */
+/* Using maximum CSS specificity and browser-specific selectors */
+
+/* Primary focus removal with maximum specificity for all controls */
+.plyr__control:focus,
+.plyr__control:focus-visible,
+.plyr__control:focus-within,
+.plyr__control:active,
+.plyr__control:hover,
+.plyr__control--overlaid:focus,
+.plyr__control--overlaid:focus-visible,
+.plyr__control--overlaid:focus-within,
+.plyr__control--overlaid:active,
+.plyr__control--overlaid:hover {
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  outline-color: transparent !important;
+  outline-width: 0 !important;
+  outline-offset: 0 !important;
+}
+
+/* Specific targeting for large play button overlay */
+.plyr .plyr__control--overlaid:focus,
+.plyr .plyr__control--overlaid:focus-visible,
+.plyr .plyr__control--overlaid:active,
+.plyr .plyr__control--overlaid:hover,
+.plyr.plyr--video .plyr__control--overlaid:focus,
+.plyr.plyr--video .plyr__control--overlaid:focus-visible,
+.plyr.plyr--video .plyr__control--overlaid:active,
+.plyr.plyr--video .plyr__control--overlaid:hover {
+  background-color: transparent !important;
+  background: none !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Browser-specific focus removal */
+.plyr__control::-moz-focus-inner,
+.plyr__control--overlaid::-moz-focus-inner {
+  border: 0 !important;
+  outline: none !important;
+}
+
+/* Webkit/Blink specific */
+.plyr__control:focus:not(:focus-visible),
+.plyr__control--overlaid:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove any residual button focus styles */
+.plyr button:focus,
+.plyr button:focus-visible,
+.plyr button:active,
+.plyr [role="button"]:focus,
+.plyr [role="button"]:focus-visible,
+.plyr [role="button"]:active {
+  background-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Ultra-specific targeting for small play button in controls */
+.plyr .plyr__controls .plyr__control[data-plyr="play"]:focus,
+.plyr .plyr__controls .plyr__control[data-plyr="play"]:focus-visible,
+.plyr .plyr__controls .plyr__control[data-plyr="play"]:active,
+.plyr .plyr__controls .plyr__control[data-plyr="play"]:hover {
+  background: none !important;
+  background-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* ============= REVIEW MODE STYLES ============= */
+/* Inline review content layout */
+.review-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+
+.review-title {
+  font-size: 16px;
+  font-weight: 400;
+  color: #2C2F48;
+  text-align: center;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.loading-message {
+  color: #666666;
+  font-size: 14px;
+  text-align: center;
+  font-style: italic;
+  margin: 8px 0;
+}
+
+/* Inline media player specific styles */
+.inline-media-player {
+  width: 100%;
 }
