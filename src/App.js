@@ -113,13 +113,13 @@ function App() {
         function renderReviewButtons() {
           return renderTwoButtonRow(
             <>
-              <FaUndo style={{ marginRight: '8px', fontSize: '1em' }} />
+              <FaUndo style={{ marginRight: '8px' }} />
               Start Over
             </>,
             navigationHandlers.handleStartOverClick,
             <>
-              <FaCloudUploadAlt style={{ marginRight: '8px', fontSize: '1em' }} />
-              Submit Recording
+              <FaCloudUploadAlt style={{ marginRight: '8px' }} />
+              Upload
             </>,
             handleSubmit
           );
